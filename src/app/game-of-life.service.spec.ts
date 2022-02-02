@@ -59,5 +59,24 @@ describe('GameOfLifeService', () => {
     });
   });
 
+  describe('#getNeighbours', () => {
+    it('should get correct heighbours', () => {
+      let testGrid = service.initGrid(5, 5);
+      expect(service.getNeighbours(testGrid[0][0])).toEqual([
+        testGrid[0][1],
+        testGrid[1][1],
+        testGrid[1][0],
+      ]);
+    });
+  });
+
+  describe('#livingNeighbours', () => {
+    it('should get correct number of living neibours', () => {
+      let testGrid = service.initGrid(5, 5);
+      testGrid[0][1].setAlive();
+      expect(service.livingNeighbours(testGrid[0][0])).toEqual(1);
+    });
+  });
+
 
 });

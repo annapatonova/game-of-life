@@ -22,6 +22,7 @@ export class GameOfLifeComponent implements OnInit {
 
   setAlive(cell:Cell): void {
     cell.setAlive();
+    this.gameOfLifeService.addLivingCell(cell);
   }
 
   startGame() {

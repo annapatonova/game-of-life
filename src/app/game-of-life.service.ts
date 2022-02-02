@@ -12,6 +12,8 @@ export class GameOfLifeService {
 
   private cols: number = 5;
 
+  private livingCells: Array<Cell> = [];
+
   private _generationCount = 0;
 
   constructor() {}
@@ -33,5 +35,51 @@ export class GameOfLifeService {
       }
     }
     return this.grid;
+  }
+
+  addLivingCell(cell: Cell) {
+    this.livingCells.push(cell);
+  }
+
+  getNeighbours(cell: Cell): Array<Cell> {
+    const { row, col } = cell;
+
+    const cellsTocheck = [
+      { row: row - 1, col: col },
+      { row: row - 1, col: col + 1 },
+      { row: row, col: col + 1 },
+      { row: row + 1, col: col + 1 },
+      { row: row + 1, col: col },
+      { row: row + 1, col: col - 1 },
+      { row: row, col: col - 1 },
+      { row: row - 1, col: col - 1 },
+    ].filter((cell) => !this.isOutOfBounds(cell));
+
+    return cellsTocheck.map((coords) => this.getCellAt(coords));
+  }
+
+  private getCellAt({ row = 0, col = 0 } = {}): Cell {
+    if (this.isOutOfBounds({ row, col })) {
+      throw Error(`Cell is out of bounds.`);
+    }
+
+    return this.grid[row][col];
+  }
+
+  private isOutOfBounds({ row = 0, col = 0 } = {}): boolean {
+    return this.isRowOutOfBounds(row) || this.isColOutOfBounds(col);
+  }
+
+  private isRowOutOfBounds(row:number) {
+    return row < 0 || this.rows <= row;
+  }
+
+  private isColOutOfBounds(col:number) {
+    return col < 0 || this.cols <= col;
+  }
+
+  livingNeighbours(cell: Cell): number {
+    var neighbours = this.getNeighbours(cell);
+    return neighbours.filter((cell) => cell.isAlive()).length;
   }
 }
