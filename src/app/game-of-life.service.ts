@@ -14,16 +14,9 @@ export class GameOfLifeService {
 
   private livingCells: Array<Cell> = [];
 
-  private _generationCount = 0;
-
   constructor() {}
 
-  get generationCount(): number {
-    return this._generationCount;
-  }
-
   initGrid(rows: number, cols: number) {
-    this._generationCount = 0;
     this.rows = rows;
     this.cols = cols;
 
@@ -52,7 +45,7 @@ export class GameOfLifeService {
     });
 
     this.updateAllCellsStatus(cellsToUpdate);
-    this._generationCount++;
+    
   }
 
   updateAllCellsStatus(cellsToUpdate: Array<Cell>) {

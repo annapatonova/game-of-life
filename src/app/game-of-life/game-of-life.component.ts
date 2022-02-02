@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { interval, Subscription } from 'rxjs';
 
 import { Cell } from '../cell/cell';
 import { GameOfLifeService } from '../game-of-life.service';
@@ -12,7 +13,14 @@ export class GameOfLifeComponent implements OnInit {
   rows: number = 5;
   @Input()
   cols: number = 5;
+  
   grid: Cell[][] = [];
+
+  started: boolean = false;
+
+  generation: number = 0;
+
+  $subscription: Subscription = new Subscription;
 
   constructor(private gameOfLifeService: GameOfLifeService) {}
 
@@ -26,21 +34,31 @@ export class GameOfLifeComponent implements OnInit {
   }
 
   startGame() {
-    
-  }
+    if (!this.started) {
+      const source = interval(500);
 
-  getGenerationCount() {
-    this.gameOfLifeService.generationCount;
+      this.$subscription = source.subscribe((val) =>{
+        this.gameOfLifeService.getNextGeneration();
+        this.generation++;
+      });
+
+      this.started = true;
+    }
   }
 
   stopGame() {
-  
+    this.$subscription.unsubscribe();
+    this.started = false;
   }
 
   resetGame() {
- 
+    this.grid = this.gameOfLifeService.initGrid(this.rows, this.cols);
+    this.$subscription.unsubscribe();
+    this.started = false;
   }
 
-  
+  ngOnDestroy() {
+    this.$subscription.unsubscribe();
+  }
 
 }
