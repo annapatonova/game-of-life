@@ -82,4 +82,23 @@ export class GameOfLifeService {
     var neighbours = this.getNeighbours(cell);
     return neighbours.filter((cell) => cell.isAlive()).length;
   }
+
+  getLivingGrid(): Array<Cell> {
+    var result: Array<Cell> = [];
+
+    this.livingCells.forEach((cell) => {
+      result = this.addToLivingGrid(result, cell);
+      result = this.addToLivingGrid(result, ...this.getNeighbours(cell));
+    });
+
+    return result;
+  }
+  addToLivingGrid(livingGrid: Array<Cell>, ...cells: Array<Cell>) {
+    cells.forEach((cell) => {
+      if (livingGrid.indexOf(cell) === -1) {
+        livingGrid.push(cell);
+      }
+    });
+    return livingGrid;
+  }
 }

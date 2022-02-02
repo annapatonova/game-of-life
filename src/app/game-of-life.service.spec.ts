@@ -71,10 +71,32 @@ describe('GameOfLifeService', () => {
   });
 
   describe('#livingNeighbours', () => {
-    it('should get correct number of living neibours', () => {
+    it('should get correct number of living neighbours', () => {
       let testGrid = service.initGrid(5, 5);
       testGrid[0][1].setAlive();
       expect(service.livingNeighbours(testGrid[0][0])).toEqual(1);
+    });
+  });
+
+  describe('#getLivingGrid', () => {
+    it('should get livings cells and all thiere neighbours', () => {
+      let testGrid = service.initGrid(5, 5);
+      testGrid[0][0].setAlive();
+      service.addLivingCell(testGrid[0][0]);
+      testGrid[2][2].setAlive();
+      service.addLivingCell(testGrid[2][2]);
+      expect(service.getLivingGrid().map((cell) => {
+        cell.row, cell.col;
+      }).sort())
+      .toEqual([
+        testGrid[0][0],testGrid[0][1],
+        testGrid[1][0],testGrid[1][1],testGrid[1][2],testGrid[1][3],
+        testGrid[2][1],testGrid[2][2],testGrid[2][3],
+        testGrid[3][1],testGrid[3][2],testGrid[3][3]
+      ].map((cell) => {
+        cell.row, cell.col;
+      })
+      .sort());
     });
   });
 
