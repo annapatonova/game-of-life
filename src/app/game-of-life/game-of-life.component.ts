@@ -55,6 +55,7 @@ export class GameOfLifeComponent implements OnInit {
     this.grid = this.gameOfLifeService.initGrid(this.rows, this.cols);
     this.$subscription.unsubscribe();
     this.started = false;
+    this.generation=0;
   }
 
   ngOnDestroy() {
