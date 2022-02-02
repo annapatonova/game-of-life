@@ -100,5 +100,72 @@ describe('GameOfLifeService', () => {
     });
   });
 
+    describe('#getNextGeneration', () => {
+      it('should not move Block Pattern', () => {
+        let testGrid = service.initGrid(5, 5);
+  
+        testGrid[1][1].setAlive();
+        service.addLivingCell(testGrid[1][1]);
+  
+        testGrid[2][2].setAlive();
+        service.addLivingCell(testGrid[1][1]);
+  
+        testGrid[1][2].setAlive();
+        service.addLivingCell(testGrid[1][1]);
+  
+        testGrid[2][1].setAlive();
+        service.addLivingCell(testGrid[1][1]);
+  
+        service.getNextGeneration();
+        expect(
+          service
+            .getLivingCells()
+            .map((cell) => {
+              cell.row, cell.col;
+            })
+            .sort()
+        ).toEqual(
+          [testGrid[1][1], testGrid[2][2], testGrid[1][2], testGrid[2][1]]
+            .map((cell) => {
+              cell.row, cell.col;
+            })
+            .sort()
+        );
+      });
+  
+      it('should move Blinker Pattern correctly', () => {
+        let testGrid = service.initGrid(5, 5);
+  
+        testGrid[1][2].setAlive();
+        service.addLivingCell(testGrid[1][1]);
+  
+        testGrid[2][2].setAlive();
+        service.addLivingCell(testGrid[1][1]);
+  
+        testGrid[3][2].setAlive();
+        service.addLivingCell(testGrid[1][1]);
+  
+        service.getNextGeneration();
+        expect(
+          service
+            .getLivingCells()
+            .map((cell) => {
+              cell.row, cell.col;
+            })
+            .sort()
+        ).toEqual(
+          [testGrid[1][1], testGrid[2][2], testGrid[1][2]]
+            .map((cell) => {
+              cell.row, cell.col;
+            })
+            .sort()
+        );
+      });
+    });
+
+    
+
+  
+
 
 });

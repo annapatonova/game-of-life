@@ -37,6 +37,39 @@ export class GameOfLifeService {
     return this.grid;
   }
 
+  getNextGeneration() {
+    var livingGrid = this.getLivingGrid();
+    var cellsToUpdate: Array<Cell> = [];
+
+    livingGrid.forEach((cell) => {
+      if (this.willDie(cell)) {
+        cell.setTempState(0);
+        cellsToUpdate.push(cell);
+      } else if (this.willAlive(cell)) {
+        cell.setTempState(1);
+        cellsToUpdate.push(cell);
+      }
+    });
+
+    this.updateAllCellsStatus(cellsToUpdate);
+    this._generationCount++;
+  }
+
+  updateAllCellsStatus(cellsToUpdate: Array<Cell>) {
+    cellsToUpdate.forEach((cell) => {
+      cell.updateCurrentState();
+      if (cell.isAlive()) {
+        this.livingCells.push(cell);
+      } else {
+        this.livingCells.splice(this.livingCells.indexOf(cell), 1);
+      }
+    });
+  }
+
+  getLivingCells():Cell[]{
+    return this.livingCells;
+  }
+
   addLivingCell(cell: Cell) {
     this.livingCells.push(cell);
   }
@@ -100,5 +133,14 @@ export class GameOfLifeService {
       }
     });
     return livingGrid;
+  }
+
+  willDie(cell: Cell):boolean {
+    const livingNeighbours = this.livingNeighbours(cell);
+    return cell.isAlive() && (livingNeighbours > 3 || livingNeighbours < 2);
+  }
+
+  willAlive(cell: Cell) : boolean{
+    return cell.isDead() && this.livingNeighbours(cell) === 3;
   }
 }
